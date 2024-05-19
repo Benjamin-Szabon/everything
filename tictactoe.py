@@ -40,7 +40,7 @@ while over != True:
         else:
             print("That cell is already occupied")
 
-    #winning
+    #winning (does not work yet)
     for v in [[0, 1], [1, 1], [1, 0], [1, -1], [0, -1], [-1, -1], [-1, 0], [-1, 1]]:
         vektor_x = v[0]
         vektor_y = v[1]
