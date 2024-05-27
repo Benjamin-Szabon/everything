@@ -40,7 +40,7 @@ while over != True:
         else:
             print("That cell is already occupied")
 
-    #winning (does not work yet)
+    #winning
     #scanning the surrounding
     for v in [[0, 1], [1, 1], [1, 0], [1, -1], [0, -1], [-1, -1], [-1, 0], [-1, 1]]:
         vektor_x = v[0]
@@ -49,7 +49,7 @@ while over != True:
             if zone[x+vektor_x][y+vektor_y]["cell"] == move:
                 vektor_wx = vektor_x
                 vektor_wy = vektor_y
-                #checking for 3 in a line
+                #checking for 3 in a line (does not work yet)
                 try:
                     if zone[x-vektor_wx-vektor_wx][y-vektor_wy-vektor_wy]["cell"] == move:
                         print(f"{move} won the round")

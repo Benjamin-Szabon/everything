@@ -1,4 +1,4 @@
-def bubblesort(list):
+def bubble_sort(list):
     i = 1
     for _ in range(len(list)):
         for j in range(len(list) - i):
@@ -7,7 +7,7 @@ def bubblesort(list):
         i += 1
 
 
-def insertionsort(list):
+def insertion_sort(list):
 	for i in range(1, len(list)):
 		j = i-1
 		while list[j] > list[j+1] and j >= 0:
@@ -15,7 +15,7 @@ def insertionsort(list):
 			j -= 1
 
 
-def binarysearch(lista):
+def binary_search(lista):
     kis = 0
     nagy = len(lista)
     keresett = int(input("Melyik számot keresed? "))
@@ -41,11 +41,11 @@ if __name__ == "__main__":
     list = [123, 1, 76, 3, 86, 27, 73, 6, 25]
     print("Eredeti lista: ",list)
 
-    bubblesort(list)
+    bubble_sort(list)
     print("Bubble sort:",list)
 
     list = [123, 1, 76, 3, 86, 27, 73, 6, 25]
-    insertionsort(list)
+    insertion_sort(list)
     print("Insertion sort:", list)
 
-    binarysearch(list)
+    binary_search(list)
