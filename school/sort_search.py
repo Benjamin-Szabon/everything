@@ -17,7 +17,7 @@ def insertion_sort(list):
 
 def binary_search(lista):
     kis = 0
-    nagy = len(lista)-1
+    nagy = len(lista)
     keresett = int(input("Melyik számot keresed? "))
     megtalalva = False
 
