@@ -14,75 +14,110 @@ vektor_x = 0
 vektor_y = 0
 vektor_wx = 0
 vektor_wy = 0
-
-#1 round
+rematch = True
+scores = {"x": 0, "y": 0}
 move = random.choice(["X","O"])
-while over != True:
-    last = move
+valid_move = False
 
-    #print out the zone
+#function for printing out the zone
+def print_zone(zone):
     print("-1-2-3-")
     for n in range(3):
         for n2 in range(3):
             print(f"|{zone[n][n2]['cell']}", end="")
         print(f"| {n+1}\n---------")
 
-    #placing the move
-    choosing = True
-    while choosing == True:
-        move_xy = int(input(f"Where do you want to place '{move}' :"))
+while rematch == True:
+    rematch = False
+
+    #1 round
+    while over != True:
+        last = move
+        print_zone(zone)
+
+        #placing the move
+        while not valid_move:
+            move_xy = input(f"Where do you want to place '{move}' :")
+            try:
+                move_xy = int(move_xy)
+                if len(str(move_xy)) == 2:
+                    valid_move = True
+                else:
+                    print_zone(zone)
+                    print("Correct syntax for placing your move is 'xy'\nx being the row, y being the column")
+            except:
+                print_zone(zone)
+                print("Correct syntax for placing your move is 'xy'\nx being the row, y being the column")
         x = int(str(move_xy)[0])-1
         y = int(str(move_xy)[1])-1
         if zone[x][y]["null"] == True:
             zone[x][y]["cell"] = move
             zone[x][y]["null"] = False
-            choosing = False
         else:
             print("That cell is already occupied")
+        valid_move = False
 
-    #winning
-    #scanning the surrounding
-    for v in [[0, 1], [1, 1], [1, 0], [1, -1], [0, -1], [-1, -1], [-1, 0], [-1, 1]]:
-        vektor_x = v[0]
-        vektor_y = v[1]
-        try:
-            if zone[x+vektor_x][y+vektor_y]["cell"] == move:
-                vektor_wx = vektor_x
-                vektor_wy = vektor_y
-                #checking for 3 in a line (does not work yet)
-                try:
-                    if zone[x-vektor_wx-vektor_wx][y-vektor_wy-vektor_wy]["cell"] == move:
-                        print(f"{move} won the round")
-                        break
-                except:
-                    try:
-                        if zone[x+vektor_wx+vektor_wx][y+vektor_wy+vektor_wy]["cell"] == move:
-                            print(f"{move} won the round")
-                            break
-                    except:
-                        pass
-        except:
-            pass
+        #scanning the surrounding
+        for v in [[0, 1], [1, 1], [1, 0], [1, -1], [0, -1], [-1, -1], [-1, 0], [-1, 1]]:
+            vektor_x = v[0]
+            vektor_y = v[1]
+            try:
+                if zone[x+vektor_x][y+vektor_y]["cell"] == move:
+                    vektor_wx = vektor_x
+                    vektor_wy = vektor_y
+                    break
+            except:
+                pass
 
+        #checking for 3 in a line
+        if zone[x][y]["cell"] == move:
 
-    #draw
-    for n in range(3):
-        for n2 in range(3):
-            if zone[n][n2]['null'] == False:
-                draw -= 1
-            if zone[n][n2]['null'] == True:
-                draw += 1
-    if draw == 0:
-        over = True
-        print("-1-2-3-")
+            try:
+                if zone[x + vektor_wx][y + vektor_wy]["cell"] == move:
+                    if zone[x + 2 * vektor_wx][y + 2 * vektor_y]["cell"] == move:
+                        over = True
+                        print_zone(zone)
+                        print(f"{move} won the round.")
+                    elif zone[x - vektor_wx][y - vektor_y]["cell"] == move:
+                        if zone[x - 2 * vektor_wx][y - 2 * vektor_y]["cell"] == move:
+                            over = True
+                            print_zone(zone)
+                            print(f"{move} won the round.")
+            except:
+                pass
+        
+        #scores
+        if over and draw != 0:
+            if move == "X":
+                scores["x"] += 1
+            else:
+                scores["y"] += 1
+
+        #draw
         for n in range(3):
             for n2 in range(3):
-                print(f"|{zone[n][n2]['cell']}", end="")
-            print(f"| {n+1}\n---------")
-        print("The round is draw")
+                if zone[n][n2]['null'] == False:
+                    draw -= 1
+                if zone[n][n2]['null'] == True:
+                    draw += 1
+        if draw == 0:
+            over = True
+            print("-1-2-3-")
+            for n in range(3):
+                for n2 in range(3):
+                    print(f"|{zone[n][n2]['cell']}", end="")
+                print(f"| {n+1}\n---------")
+            print("The round is draw")
+        #next move
+        if last == "X":
+            move = "O"
+        else:
+            move = "X"
 
-    #next move
-    if last == "X":
-        move = "O"
-    else:
-        move = "X"
+    while not rematch:
+        answer = input("Do you want to play another round?\n   yes -> Y\n   no -> N\n")
+        if answer.upper() == "Y":
+            rematch = True
+            over = True
+        elif answer.upper() == "N":
+            rematch = False
