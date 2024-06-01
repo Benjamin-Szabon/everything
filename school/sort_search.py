@@ -8,11 +8,11 @@ def bubble_sort(list):
 
 
 def insertion_sort(list):
-	for i in range(1, len(list)):
-		j = i-1
-		while list[j] > list[j+1] and j >= 0:
-			list[j], list[j+1] = list[j+1], list[j]
-			j -= 1
+        for i in range(1, len(list)):
+                j = i-1
+                while list[j] > list[j+1] and j >= 0:
+                        list[j], list[j+1] = list[j+1], list[j]
+                        j -= 1
 
 
 def binary_search(lista):
