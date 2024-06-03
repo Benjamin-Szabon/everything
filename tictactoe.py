@@ -5,7 +5,7 @@ over = False
 move_xy = 0
 last = ""
 rematch = True
-scores = {"x": 0, "y": 0}
+scores = {"x": 0, "o": 0, "draw": 0}
 move = random.choice(["X","O"])
 valid_move = False
 end = ["END", "CLOSE", "QUIT", "EXIT"]
@@ -13,18 +13,19 @@ end = ["END", "CLOSE", "QUIT", "EXIT"]
 #function for printing out the zone
 def print_zone(zone, scores):
     os.system("cls")
-    print(f"-----------\n|Scores:  |\n|x:{scores['x']} | y:{scores['y']}|\n-----------\n")
-    print("-1-2-3-")
+    print(f"\n|---------|\n|Scores:  |\n|X: {scores['x']}     |\n|O: {scores['o']}     |\n|Draw: {scores['draw']}  |\n|---------|\n|---------|")
+    print("|1 2 3 /  |")
     for n in range(3):
         for n2 in range(3):
             print(f"|{zone[n][n2]['cell']}", end="")
-        print(f"| {n+1}\n---------")
+        print(f"| {n+1} |\n|---------|")
+    print("")
 
 while rematch == True:
     rematch = False
-    zone = [[{"null": True, "xy": 11, "cell": " "}, {"null": True, "xy": 12, "cell": " "}, {"null": True, "xy": 31, "cell": " "},], 
-        [{"null": True, "xy": 21, "cell": " "}, {"null": True, "xy": 22, "cell": " "}, {"null": True, "xy": 32, "cell": " "},], 
-        [{"null": True, "xy": 31, "cell": " "}, {"null": True, "xy": 13, "cell": " "}, {"null": True, "xy": 33, "cell": " "},] ]
+    zone = [[{"null": True, "cell": " "}, {"null": True, "cell": " "}, {"null": True, "cell": " "},], 
+        [{"null": True, "cell": " "}, {"null": True, "cell": " "}, {"null": True, "cell": " "},], 
+        [{"null": True, "cell": " "}, {"null": True, "cell": " "}, {"null": True, "cell": " "},] ]
     x = 0
     y = 0
     draw = 9
@@ -69,23 +70,23 @@ while rematch == True:
             vektor_y = v[1]
             try:
                 if zone[x+vektor_x][y+vektor_y]["cell"] == move:
-                    vektor_wx = vektor_x
-                    vektor_wy = vektor_y
                     break
             except:
                 pass
 
-        #checking for 3 in a line | still very buggy but working on it
+        #checking for win condition
         try:
-            if zone[x + vektor_wx][y + vektor_wy]["cell"] == move:
-                if zone[x + (2 * vektor_wx)][y + (2 * vektor_wy)]["cell"] == move:
-                    over = True
-                    print_zone(zone, scores)
-                    print(f"{move} won the round.")
-                elif zone[x - vektor_wx][y - vektor_wy]["cell"] == move:
-                    over = True
-                    print_zone(zone, scores)
-                    print(f"{move} won the round.")
+            if zone[x + (2 * vektor_x)][y + (2 * vektor_y)]["cell"] == move: 
+                over = True
+                print_zone(zone, scores)
+                print(f"{move} won the round.")
+        except:
+            pass
+        try:
+            if zone[x - vektor_x][y - vektor_y]["cell"] == move:
+                over = True
+                print_zone(zone, scores)
+                print(f"{move} won the round.")
         except:
             pass
     
@@ -94,23 +95,21 @@ while rematch == True:
             if move == "X":
                 scores["x"] += 1
             else:
-                scores["y"] += 1
+                scores["o"] += 1
 
         #draw
-        for n in range(3):
-            for n2 in range(3):
-                if zone[n][n2]['null'] == False:
-                    draw -= 1
-                if zone[n][n2]['null'] == True:
-                    draw += 1
-        if draw == 0:
-            over = True
-            print("-1-2-3-")
+        if not over:
             for n in range(3):
                 for n2 in range(3):
-                    print(f"|{zone[n][n2]['cell']}", end="")
-                print(f"| {n+1}\n---------")
-            print("The round is draw")
+                    if zone[n][n2]['null'] == False:
+                        draw -= 1
+                    elif zone[n][n2]['null'] == True:
+                        draw += 1
+            if draw == 0:
+                over = True
+                print_zone(zone, scores)
+                print("The round is draw.")
+                scores["draw"] += 1
 
         #next move
         if last == "X":
