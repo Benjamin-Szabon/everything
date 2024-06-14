@@ -1,47 +1,77 @@
 import os
-
-
-board = [["3", " ", "4", " "], 
-    [" ", "1", " ", "2"],
-    [" ", "4", " ", "3"],
-    ["2", " ", "1", " "]]
+szo = "alma"
 over = False
+rossz = []
+board = [[" ", " ", " ", " ", " "],
+         [" ", " ", " ", " ", " "],
+         [" ", " ", " ", " ", " "],
+         [" ", " ", " ", " ", " "],
+         [" ", " ", " ", " ", " "],
+         [" ", " ", " ", " ", " "],
+         [" ", " ", " ", " ", " "]]
+points = 0
+rejtett = "_ " * len(szo)
+rejtett = rejtett.strip().split()
 
-def print_board(zone,):
+def print_board(board):
     os.system("cls")
-    print(f"\n|-------------|\n|   Sudoku    |\n|-------------|")
-    print("|A B C D //   |\n|-------------|")
-    for n in range(4):
-        for n2 in range(4):
-            print(f"|{zone[n][n2]}", end="")
-        print(f" || {n+1} |\n|-------------|")
-    print("")
+    for n in range(7):
+        for n2 in range(5):
+            print(board[n][n2], end="")
+        print("")
+    for n in range(len(rejtett)):
+        print(rejtett[n], "", end="")
+    print(f"\nRossz tippek: {rossz} ")
 
-def x_correction(x):
-    if x.upper() == "A":
-        x = 0
-    elif x.upper() == "B":
-        x = 1
-    elif x.upper() == "C":
-        x = 2
-    elif x.upper() == "D":
-        x = 3
-    return x
 
+def loose(points, board):
+    if points == 1:
+        board[6][0] = "_"
+        board[6][1] = "_"
+        board[6][2] = "_"
+        board[6][3] = "_"
+    elif points == 2:
+        board[1][1] = "|"
+        board[2][1] = "|"
+        board[3][1] = "|"
+        board[4][1] = "|"
+        board[5][1] = "|"
+    elif points == 3:
+        board[0][1] = "_"
+        board[0][2] = "_"
+        board[0][3] = "_"
+    elif points == 4:
+        board[1][4] = "|"
+    elif points == 5:
+        board[2][4] = "O"
+    elif points == 6:
+        board[3][3] = "/|\\"
+    elif points == 7:
+        board[4][3] = "/ \\"
+    
 
 while not over:
     print_board(board)
-    validmove = False
-    while not validmove:
-        move = input("Milyen számot tennél és hova? (szám, oszlop, sor)")
-        move = move.strip().split()
-        move_number = int(move[0])
-        x = move[1]
-        y = int(move[2])-1
-        x = x_correction(x)
+    tipp = input("Tippelj egy betűt / a szót: ").lower()
 
-        if board[y][x] == " ":
-            board[y][x] = move_number
-            validmove = True
-        else:
-            change = input("Ezen a helyen már van egy szám, szeretnéd lecserélni?")
+    if tipp not in szo and tipp not in rossz:
+        rossz.append(tipp)
+        points += 1
+    else:
+        for n in range(len(szo)):
+            if tipp == szo[n]:
+                rejtett[n] = tipp
+    loose(points,board)
+
+    if tipp == szo or "_" not in rejtett:
+        for n in range(len(szo)):
+            if tipp == szo[n]:
+                rejtett[n] = tipp
+        print_board(board)
+        print("Kitaláltad a szót")
+        over = True
+
+    if points >= 7:
+        print_board(board)
+        print("Felakasztottak :(")
+        over = True
