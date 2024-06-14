@@ -2,20 +2,6 @@ import os
 import random
 
 
-szo = random.choice(["alma", "kutya", "templom", "kerék", "parkoló"])
-over = False
-rossz = []
-board = [[" ", " ", " ", " ", " "],
-         [" ", " ", " ", " ", " "],
-         [" ", " ", " ", " ", " "],
-         [" ", " ", " ", " ", " "],
-         [" ", " ", " ", " ", " "],
-         [" ", " ", " ", " ", " "],
-         [" ", " ", " ", " ", " "]]
-points = 0
-rejtett = "_ " * len(szo)
-rejtett = rejtett.strip().split()
-
 def print_board(board):
     os.system("cls")
     for n in range(7):
@@ -25,8 +11,6 @@ def print_board(board):
     for n in range(len(rejtett)):
         print(rejtett[n], "", end="")
     print(f"\nRossz tippek: {rossz} ")
-
-
 def loose(points, board):
     if points == 1:
         board[6][0] = "_"
@@ -53,30 +37,50 @@ def loose(points, board):
         board[3][3] = "/|\\"
     elif points == 7:
         board[4][3] = "/ \\"
-    
+again = True
 
-while not over:
-    print_board(board)
-    tipp = input("Tippelj egy betűt / a szót: ").lower()
+while again == True:
+    szo = random.choice(["alma", "kutya", "templom", "kerék", "parkoló"])
+    over = False
+    rossz = []
+    board = [[" ", " ", " ", " ", " "],
+            [" ", " ", " ", " ", " "],
+            [" ", " ", " ", " ", " "],
+            [" ", " ", " ", " ", " "],
+            [" ", " ", " ", " ", " "],
+            [" ", " ", " ", " ", " "],
+            [" ", " ", " ", " ", " "]]
+    points = 0
+    rejtett = "_ " * len(szo)
+    rejtett = rejtett.strip().split()
+    again = False
 
-    if tipp not in szo and tipp not in rossz:
-        rossz.append(tipp)
-        points += 1
-    else:
-        for n in range(len(szo)):
-            if tipp == szo[n]:
-                rejtett[n] = tipp
-    loose(points,board)
-
-    if tipp == szo or "_" not in rejtett:
-        for n in range(len(szo)):
-            if tipp == szo[n]:
-                rejtett[n] = tipp
+    while not over:
         print_board(board)
-        print("Kitaláltad a szót")
-        over = True
+        tipp = input("Tippelj egy betűt / a szót: ").lower()
 
-    if points >= 7:
-        print_board(board)
-        print("Felakasztottak :(")
-        over = True
+        if tipp not in szo and tipp not in rossz:
+            rossz.append(tipp)
+            points += 1
+        else:
+            for n in range(len(szo)):
+                if tipp == szo[n]:
+                    rejtett[n] = tipp
+        loose(points,board)
+
+        if tipp == szo or "_" not in rejtett:
+            for n in range(len(szo)):
+                if tipp == szo[n]:
+                    rejtett[n] = tipp
+            print_board(board)
+            print("Kitaláltad a szót")
+            over = True
+
+        if points >= 7:
+            print_board(board)
+            print("Felakasztottak :(")
+            over = True
+    again = input("Folyatod ->y vagy kilépsz ->n ? ")
+    if again.lower() == "y":
+        again = True
+        over = False
